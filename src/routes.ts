@@ -1,42 +1,22 @@
-import express from 'express';
+import express from "express";
+import knex from "./database/conection"
+
+import CollectorPointsController from "./controllers/CollectorPointsController";
+import ItemTypesController from "./controllers/ItemTypesController";
+
 const routes = express.Router();
 
-const users = [
-    "Mamama", "Nenene", "Tatata"
-];
+const collectorPointsController = new CollectorPointsController();
+const itemTypesController = new ItemTypesController();
 
 routes.get(
-    "/users", (request, response) => {
-        console.log("endpoint: " + request.url);
-        
-        let result = users;
-        
-        const qryFilter = request.query;
-        
-        result = filterUsers(qryFilter, users);
-
-        return response.json({
-            "users" : result
-        });
-    } 
+    "/itemTypes", itemTypesController.index
 );
 
 routes.get(
-    "/users/:id", (request, response) => {
-        let id = Number(request.params.id);
-        console.log("endpoint: " + request.url);
-        return response.json({
-            "user" : users[id]
-        });
-    } 
-);
+    "/collectorPoints/:id", collectorPointsController.show);
 
-function filterUsers(filter: any, users: Array<string>){
-
-    for(let currentKey in filter){
-        users = users.filter(u => u.includes(filter[currentKey]));
-    }
-    return users;
-}
+routes.post(
+    "/collectorPoints", collectorPointsController.create);
 
 export default routes;

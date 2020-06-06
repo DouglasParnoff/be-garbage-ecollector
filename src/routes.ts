@@ -13,10 +13,10 @@ routes.get(
     "/itemTypes", itemTypesController.index
 );
 
-routes.get(
-    "/collectorPoints/:id", collectorPointsController.show);
+routes.get("/collectorPoints", collectorPointsController.index);
 
-routes.post(
-    "/collectorPoints", collectorPointsController.create);
+routes.get("/collectorPoints/:id", collectorPointsController.show);
+
+routes.post("/collectorPoints", collectorPointsController.create);
 
 export default routes;

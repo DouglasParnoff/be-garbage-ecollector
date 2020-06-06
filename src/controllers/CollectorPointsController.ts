@@ -1,7 +1,26 @@
 import knex from "../database/conection";
-import {Request, Response} from "express";
+import {Request, Response, response} from "express";
 
 class CollectorPointsController{
+    
+    async index (request: Request, response: Response) {
+        const {city, uf, itemTypes} = request.query;
+
+        const parsedItemTypes = String(itemTypes)
+            .split(",")
+            .map( i => Number(i.trim()));
+
+        const collectorPoints = await knex("collector_point")
+            .join("collector_item_type", "collector_point.id"
+                    , "=", "collector_item_type.collector_point_id")
+            .whereIn("collector_item_type.item_type_id", parsedItemTypes)
+            .where("uf", String(uf))
+            .where("city", String(city))
+            .distinct()
+            .select("collector_point.*")
+
+        return response.json(collectorPoints);
+    }
 
     async show (request: Request, response: Response) {
         const {id} = request.params;
